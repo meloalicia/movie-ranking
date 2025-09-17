@@ -1,8 +1,11 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
+from routes.avaliacao_routes import avaliacao_routes
 
 app = Flask(__name__)
 CORS(app)
+
+app.register_blueprint(avaliacao_routes)
 
 #Base de filmes (mock)
 filmes = [
@@ -12,7 +15,21 @@ filmes = [
 
 @app.route("/")
 def home():
-    return jsonify({"mensagem": "Back-end de Filmes funcionando!"})
+    filmes_completo = [
+        {
+            "titulo": "Matrix",
+            "descricao": "Um hacker descobre a verdade sobre sua realidade...",
+            "poster": "https://link-para-o-poster.jpg",
+            "avaliacoes": 120
+        },
+        {
+            "titulo": "Titanic",
+            "descricao": "Romance épico no navio mais famoso da história...",
+            "poster": "https://link-para-o-poster2.jpg",
+            "avaliacoes": 95
+        }
+    ]
+    return render_template("filmes.html", filmes=filmes_completo)
 
 #Listar todos os filmes
 @app.route("/filmes", methods=["GET"])
