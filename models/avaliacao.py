@@ -7,12 +7,12 @@ class Avaliacao:
         self.comentario = comentario
 
 
-        def to_dict(self):
+    def to_dict(self):
             return {
                 "id": self.id,
                 "idfilme": self.idfilme,
                 "usuario": self.usuario,
                 "nota":  self.nota,
-                "comenatario": self.comenatrio
+                "comenatario": self.comentario
             
             }

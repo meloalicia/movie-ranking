@@ -4,6 +4,10 @@ from services.avaliacao_service import listar_avaliacoes, criar_avaliacao, atual
 
 avaliacao_routes = Blueprint("avaliacao_routes", __name__)
 
+@avaliacao_routes.route('/avaliacao')
+def home_avaliacao():
+    return render_template('filmes.html')
+
 #Listar todas as avaliações de um filme
 @avaliacao_routes.route("/avaliacao/<int:idfilme>", methods=["GET"])
 def listar_todas_avaliacoes(idfilme):
