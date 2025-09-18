@@ -1,3 +1,4 @@
+import requests
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 from routes.avaliacao_routes import avaliacao_routes
@@ -7,29 +8,29 @@ CORS(app)
 
 app.register_blueprint(avaliacao_routes)
 
-#Base de filmes (mock)
-filmes = [
-    {"id": 1, "titulo": "Matrix", "genero": "Ficção Científica"},
-    {"id": 2, "titulo": "Titanic", "genero": "Romance"},
-]
+#Lista local de filmes (será preenchida pela API externa)
+filmes = []
 
 @app.route("/")
 def home():
-    filmes_completo = [
-        {
-            "titulo": "Matrix",
-            "descricao": "Um hacker descobre a verdade sobre sua realidade...",
-            "poster": "https://link-para-o-poster.jpg",
-            "avaliacoes": 120
-        },
-        {
-            "titulo": "Titanic",
-            "descricao": "Romance épico no navio mais famoso da história...",
-            "poster": "https://link-para-o-poster2.jpg",
-            "avaliacoes": 95
-        }
-    ]
-    return render_template("filmes.html", filmes=filmes_completo)
+    api_key = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwODExOGIxM2YwN2NiOWQzYmYwODNiMTFmMjQxYjk1NyIsIm5iZiI6MTc1NzE5NjA5Ny4wNzksInN1YiI6IjY4YmNhZjQxZjIzZDNlMzIwMzk0NzNiNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ._8jdsXPumfjNOTjnses_QgbQX7syERexuKDQr8kqvHg'
+    url = "https://api.themoviedb.org/3/movie/now_playing?language=pt-BR&region=BR"
+    headers = {"Authorization": f"Bearer {api_key}"}
+    response = requests.get(url, headers=headers)
+    json_filmes = response.json()["results"]
+
+    filmes_api = []
+    for item in json_filmes:
+        filmes_api.append({
+            "id": item["id"],
+            "titulo": item["original_title"],
+            "descricao": item["overview"],
+            "estreia": item["release_date"],
+            "poster": "https://image.tmdb.org/t/p/w185/" + item["poster_path"]
+        })
+
+    return render_template("filmes.html", filmes=filmes_api)
+
 
 #Listar todos os filmes
 @app.route("/filmes", methods=["GET"])

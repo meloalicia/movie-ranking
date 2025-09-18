@@ -7,8 +7,15 @@ base_avaliacao = [
 ]
 
 #Listar todas as avaliações
-def listar_avaliacoes():
-    return [avaliacao for avaliacao in base_avaliacao if int(avaliacao["idfilme"])]
+def listar_avaliacoes(idfilme):
+    resultado = []
+    for avaliacao in base_avaliacao:
+        print("DEBUG:", avaliacao["idfilme"], idfilme)  # mostra os valores comparados
+        if str(avaliacao["idfilme"]).strip() == str(idfilme):
+            resultado.append(avaliacao)
+    return resultado
+
+
     
 #Buscar dados de uma avaliação específica
 def buscar_avaliacao(id):
